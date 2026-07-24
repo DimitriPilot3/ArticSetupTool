@@ -10,6 +10,22 @@
 
 NOTE: A recent version of Luma3DS (v13.3.1 or newer) is required to use Azahar Artic Setup Tool. You can get it [here](https://github.com/LumaTeam/Luma3DS/releases/latest).
 
+## Build instructions
+
+You will need:
+- libctru 2.7.0+
+- [bin2c](https://sourceforge.net/projects/bin2c/files/latest/download) added to your PATH
+
+Then run the following commands in your devkitPro (MSYS2) environment:
+
+```sh
+git clone --recurse-submodules https://github.com/azahar-emu/ArticSetupTool.git
+cd ArticSetupTool
+make
+```
+
+Then after a successful build, you will find output files in `app/output/3ds-arm`. These include `AzaharArticSetup.cia` and `AzaharArticSetup.3dsx` among other things.
+
 ## License
 See [LICENSE](LICENSE)
 

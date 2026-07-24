@@ -571,7 +571,9 @@ namespace ArticFunctions {
         }
 
         u32 myDeviceID;
-        res = AM_GetDeviceId(&myDeviceID);
+        s32 internalResult;
+        //res = AM_GetDeviceId(&myDeviceID);
+        res = AM_GetDeviceId(&internalResult, &myDeviceID);
         amExit();
 
         if ((u32)deviceID != myDeviceID) {
@@ -679,7 +681,9 @@ namespace ArticFunctions {
             }
 
             u32 deviceID;
-            res = AM_GetDeviceId(&deviceID);
+            s32 internalResult;
+            //res = AM_GetDeviceId(&deviceID);
+            res = AM_GetDeviceId(&internalResult, &deviceID);
             amExit();
             if (R_FAILED(res)) {
                 mi.FinishGood(res);
