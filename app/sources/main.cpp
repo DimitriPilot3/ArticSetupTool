@@ -163,12 +163,14 @@ void Main() {
     logger.Raw(false, isEmulator ? " " : "    Press A to launch setup tool.");
     logger.Raw(false, "    Press B or START to exit.");
     logger.Raw(true, "");
-    logger.Info("Welcome to Azahar Artic Setup Tool!\n    Only use this tool with Azahar Emulator\n\n    Check bottom screen for controls.");
+    logger.Info("Welcome to Azahar Artic Setup Tool!\n    Only use this tool with Azahar Emulator\n\n    Check bottom screen for controls.\n");
     
     if (isEmulator) {
         logger.Error("This tool can only be used on a real console.");
     }
 
+    int seconds_until_autolaunch = 23;
+    u64 next_second_tick = 0ull;
     bool do_jump = false;
     while (aptMainLoop())
 	{
@@ -182,17 +184,30 @@ void Main() {
             break;
         }
 
-        if ((kDown & KEY_A) && !isEmulator) {
-            logger.Info("Launching Azahar Artic Setup");
-            bool done = extractPlugin() && launchPlugin();
-            if (done) {
-                do_jump = true;
-                logger.Raw(true, "");
-                logger.Info("Done! Please wait...");
-                svcSleepThread(3000000000);
-                break;
-            } else {
-                logger.Error("Failed to launch Azahar Artic Setup");
+        if (!isEmulator) {
+            u64 tick;
+            if (seconds_until_autolaunch > 0 && (tick = svcGetSystemTick()) > next_second_tick) {
+                next_second_tick = tick + (1000ull * CPU_TICKS_PER_MSEC);
+                if (--seconds_until_autolaunch == 20) {
+                    logger.Info("Setup tool will launch in \x1b[s20 seconds...");
+                } else if (seconds_until_autolaunch > 0 && seconds_until_autolaunch < 20) {
+                    logger.Raw(true, "\x1b[u%2d\n", seconds_until_autolaunch);
+                }
+            }
+
+            if ((kDown & KEY_A) || seconds_until_autolaunch == 0) {
+                logger.Info("Launching Azahar Artic Setup");
+                bool done = extractPlugin() && launchPlugin();
+                if (done) {
+                    do_jump = true;
+                    logger.Raw(true, "");
+                    logger.Info("Done! Please wait...");
+                    svcSleepThread(3000000000);
+                    break;
+                } else {
+                    logger.Error("Failed to launch Azahar Artic Setup");
+                }
+                seconds_until_autolaunch = -1;
             }
         }
 
