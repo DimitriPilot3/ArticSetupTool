@@ -16,7 +16,7 @@ SOURCES 	:=  ArticProtocol/sources sources sources/CTRPluginFramework
 
 VERSION_MAJOR := 1
 VERSION_MINOR := 0
-VERSION_REVISION := 3
+VERSION_MICRO := 4
 SERVER_PORT := 5543
 
 IP 			:=  19
@@ -33,7 +33,7 @@ CFLAGS		:=	$(ARCH) -Os -mword-relocations \
 				-fomit-frame-pointer -ffunction-sections -fno-strict-aliasing
 
 CFLAGS		+=	$(INCLUDE) -D__3DS__ -DVERSION_MAJOR=$(VERSION_MAJOR) -DVERSION_MINOR=$(VERSION_MINOR) \
-                -DVERSION_REVISION=$(VERSION_REVISION) -DSERVER_PORT=$(SERVER_PORT)
+                -DVERSION_MICRO=$(VERSION_MICRO) -DSERVER_PORT=$(SERVER_PORT)
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++20
 
