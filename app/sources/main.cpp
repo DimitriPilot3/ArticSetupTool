@@ -47,7 +47,7 @@ error:
 }
 
 bool extractPlugin() {
-    u32 expectedVersion = SYSTEM_VERSION(VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
+    u32 expectedVersion = SYSTEM_VERSION(VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
     bool plugin_needs_update = true;
     FILE* f = fopen(artic_setup_plugin, "r");
     if (f) {
@@ -159,7 +159,7 @@ void Main() {
     {
         CTRPluginFramework::BCLIM((void*)__data_logo_bin, __data_logo_bin_size).Render(CTRPluginFramework::Rect<int>((320 - 128) / 2, (240 - 128) / 2, 128, 128));
     }
-    logger.Raw(false, "\n      Azahar Artic Setup v%d.%d.%d\n", VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
+    logger.Raw(false, "\n      Azahar Artic Setup v%d.%d.%d\n", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
     logger.Raw(false, isEmulator ? " " : "    Press A to launch setup tool.");
     logger.Raw(false, "    Press B or START to exit.");
     logger.Raw(true, "");

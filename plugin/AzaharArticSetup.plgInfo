@@ -3,7 +3,7 @@ Author: Nanquitas
 Version: # Plugin version
     Major: VERSION_MAJOR
     Minor: VERSION_MINOR
-    Revision: VERSION_REVISION
+    Revision: VERSION_MICRO
 
 Targets: # Low TitleId of games which are compatibles with this plugin (empty for all)
     - 0x00020000
