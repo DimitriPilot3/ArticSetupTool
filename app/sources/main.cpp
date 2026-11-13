@@ -9,7 +9,7 @@
 #include "plgldr.h"
 #include "BCLIM.hpp"
 #include "logo.h"
-#include "plugin.h"
+#include "AzaharArticSetup_3gx.h"
 #include "3gx.h"
 
 Logger logger;
@@ -69,9 +69,9 @@ bool extractPlugin() {
             logger.Error("Cannot open plugin file");
             return false;
         }
-        int written = fwrite(plugin_AzaharArticSetup_3gx, 1, plugin_AzaharArticSetup_3gx_size, f);
+        int written = fwrite(AzaharArticSetup_3gx, 1, AzaharArticSetup_3gx_size, f);
         fclose(f);
-        if (written != plugin_AzaharArticSetup_3gx_size) {
+        if (written != AzaharArticSetup_3gx_size) {
             logger.Error("Cannot write plugin file");
             return false;
         }
