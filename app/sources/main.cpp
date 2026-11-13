@@ -135,6 +135,11 @@ bool checkEmulator() {
 	return out != 0;
 }
 
+bool checkWirelessEnabled(void) {
+	u8 wireless = (*(vu8 *)((0x10140000 | (1u << 31)) + 0x180));
+	return wireless & 1;
+}
+
 PrintConsole topScreenConsole, bottomScreenConsole;
 int transferedBytes = 0;
 void Main() {
@@ -169,6 +174,8 @@ void Main() {
     
     if (isEmulator) {
         logger.Error("This tool will not run on an emulator.\n    Please run it on your real console.");
+    } else if (!checkWirelessEnabled()) {
+        logger.Warning("Wireless communication is currently OFF.\n    It will be turned ON if you launch the tool.");
     }
 
     int seconds_until_autolaunch = 25;
