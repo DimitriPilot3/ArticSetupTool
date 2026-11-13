@@ -133,6 +133,11 @@ bool checkEmulator() {
 	return out != 0;
 }
 
+bool checkWirelessEnabled(void) {
+	u8 wireless = (*(vu8 *)((0x10140000 | (1u << 31)) + 0x180));
+	return wireless & 1;
+}
+
 PrintConsole topScreenConsole, bottomScreenConsole;
 int transferedBytes = 0;
 void Main() {
@@ -166,7 +171,9 @@ void Main() {
     logger.Info("Welcome to Azahar Artic Setup Tool!\n    Only use this tool with Azahar Emulator\n\n    Check bottom screen for controls.");
     
     if (isEmulator) {
-        logger.Error("This tool can only be used on a real console.");
+        logger.Error("This tool will not run on an emulator.\n    Please run it on your real console.");
+    } else if (!checkWirelessEnabled()) {
+        logger.Warning("Wireless communication is currently OFF.\n    Launching this tool will turn it ON.");
     }
 
     bool do_jump = false;

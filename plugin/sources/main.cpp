@@ -68,6 +68,15 @@ void    EnableSleep(void)
 	mcuHwcExit();
 }
 
+void    SetWirelessEnabled(bool enabled)
+{
+	if (R_FAILED(nwmExtInit()))
+		return;
+
+	NWMEXT_ControlWirelessEnabled(enabled);
+	nwmExtExit();
+}
+
 void Start(void* arg) {
     int res;
     void* SOC_buffer = memalign(SOC_ALIGN, SOC_BUFFERSIZE);
@@ -76,6 +85,9 @@ void Start(void* arg) {
         logger.Error("Server: Cannot initialize sockets");
         return;
     }
+
+    SetWirelessEnabled(true);
+
     while (should_run) {
         svcSleepThread(500000000);
         struct sockaddr_in servaddr = {0};
