@@ -70,8 +70,7 @@ bool extractPlugin() {
             return false;
         }
         int written = fwrite(AzaharArticSetup_3gx, 1, AzaharArticSetup_3gx_size, f);
-        fclose(f);
-        if (written != AzaharArticSetup_3gx_size) {
+        if (fclose(f) != 0 || written != AzaharArticSetup_3gx_size) {
             logger.Error("Cannot write plugin file");
             return false;
         }
