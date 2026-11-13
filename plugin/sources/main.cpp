@@ -87,9 +87,21 @@ void Start(void* arg) {
     }
 
     SetWirelessEnabled(true);
+    bool ac_ok = R_SUCCEEDED(acInit());
+    u32 ac_status, ac_last_status = 0;
 
     while (should_run) {
         svcSleepThread(500000000);
+        if (ac_ok && R_SUCCEEDED(ACU_GetStatus(&ac_status))) {
+            if (ac_status <= 1 && ac_status != ac_last_status) {
+                logger.Info("Searching for an access point...");
+            }
+            ac_last_status = ac_status;
+            if (ac_status <= 1) {
+                continue;
+            }
+        }
+
         struct sockaddr_in servaddr = {0};
         listen_fd = socket(AF_INET, SOCK_STREAM, 0);
         if (listen_fd < 0) {
@@ -98,7 +110,7 @@ void Start(void* arg) {
         }
 
         if (!ArticProtocolServer::SetNonBlock(listen_fd, true)) {
-            logger.Error("Server:: Failed to set non-block");
+            logger.Error("Server: Failed to set non-block");
             close(listen_fd);
             listen_fd = -1;
             continue;
@@ -175,6 +187,8 @@ void Start(void* arg) {
             (*it)();
         }
     }
+
+    if (ac_ok) acExit();
     socExit();
     free(SOC_buffer);
 }
