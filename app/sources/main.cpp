@@ -47,8 +47,10 @@ error:
 }
 
 bool extractPlugin() {
-    u32 expectedVersion = SYSTEM_VERSION(VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
     bool plugin_needs_update = true;
+// In development builds, always overwrite the existing plugin file regardless of its current version.
+#if VERSION_MAJOR > 0
+    u32 expectedVersion = SYSTEM_VERSION(VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
     FILE* f = fopen(artic_setup_plugin, "r");
     if (f) {
         _3gx_Header header;
@@ -58,10 +60,11 @@ bool extractPlugin() {
         }
     }
     if (f) fclose(f);
+#endif
 
     if (plugin_needs_update) {
         logger.Info("Updating Azahar Artic Setup plugin file");
-        f = fopen_mkdir(artic_setup_plugin, "w");
+        FILE* f = fopen_mkdir(artic_setup_plugin, "w");
         if (!f) {
             logger.Error("Cannot open plugin file");
             return false;
