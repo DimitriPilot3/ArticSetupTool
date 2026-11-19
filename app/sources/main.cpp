@@ -127,6 +127,63 @@ bool launchPlugin() {
     return true;
 }
 
+u64 getTitleIdOfSystemSettingsApp() {
+	OS_VersionBin cver = {0};
+	OS_VersionBin nver = {0};
+	osGetSystemVersionData(&nver, &cver);
+	switch (cver.region) {
+	case 'E':
+		return 0x0004001000022000;
+	case 'U':
+		return 0x0004001000021000;
+	case 'J':
+		return 0x0004001000020000;
+	case 'C':
+		return 0x0004001000026000;
+	case 'K':
+		return 0x0004001000027000;
+	case 'T':
+		return 0x0004001000028000;
+	default:
+		return 0;
+	}
+}
+
+bool jumpToSystemSettings() {
+	u64 program_id = getTitleIdOfSystemSettingsApp();
+	if (!program_id) {
+		return false;
+	}
+
+#if 0
+	// Method 1: use the chainloader
+	// Does not work on Luma <=13.4 when autobooting into hbmenu unless the HOME menu has been loaded beforehand
+	// More specifically, Luma's "dirty chainload" just chainloads back to Homebrew Launcher in this case
+	aptSetChainloader(program_id, MEDIATYPE_NAND);
+	return true;
+#else
+	// Method 2: do an application jump
+	// When autobooting into hbmenu, this does work, but for some reason pressing the power button afterwards will crash the 'menu' process (does not happen if HOME menu was properly registered prior to the app launch)
+	Result rc;
+	if (R_FAILED(rc = APT_PrepareToDoApplicationJump(0, program_id, MEDIATYPE_NAND))) {
+		logger.Error("APT_PrepareToDoApplicationJump failed: %lx", rc);
+		return false;
+	}
+
+	static u8 param[0x300] = {0};
+	static u8 hmac[0x20] = {0};
+	while ((rc = APT_DoApplicationJump(param, sizeof(param), hmac)) == 0xc8a0cff0) {
+		// apt is busy, retry later
+		svcSleepThread(0.2 * 1000 * 1000 * 1000);
+	}
+	if (R_FAILED(rc)) {
+		logger.Error("APT_DoApplicationJump failed: %lx", rc);
+		return false;
+	}
+	return true;
+#endif
+}
+
 bool checkEmulator() {
     s64 out = 0;
 	svcGetSystemInfo(&out, 0x20000, 0);
@@ -211,30 +268,22 @@ void Main() {
     //Wait for VBlank
     gspWaitForVBlank();
 
-	gfxExit();
+    if (do_jump) {
+        if (!jumpToSystemSettings()) {
+            // Flush and swap framebuffers
+            gfxFlushBuffers();
+            gfxSwapBuffers();
+
+            //Wait for VBlank
+            gspWaitForVBlank();
+
+            svcSleepThread(5LL * 1000 * 1000 * 1000);
+        }
+    }
+
+    gfxExit();
     gspLcdExit();
     logger.End();
-
-    if (do_jump) {
-        OS_VersionBin cver = {0};
-        OS_VersionBin nver = {0};
-        osGetSystemVersionData(&nver, &cver);
-        u64 program_id = 0;
-        if (cver.region == 'E') {
-            program_id = 0x0004001000022000;
-        } else if (cver.region == 'U') {
-            program_id = 0x0004001000021000;
-        } else if (cver.region == 'J') {
-            program_id = 0x0004001000020000;
-        } else if (cver.region == 'C') {
-            program_id = 0x0004001000026000;
-        } else if (cver.region == 'K') {
-            program_id = 0x0004001000027000;
-        } else if (cver.region == 'T') {
-            program_id = 0x0004001000028000;
-        }
-        aptSetChainloader(program_id, MEDIATYPE_NAND);
-    }
 }
 
 extern "C" {
