@@ -169,6 +169,9 @@ void Main() {
         logger.Error("This tool will not run on an emulator.\n    Please run it on your real console.");
     }
 
+    // Dry scan all the inputs (in case some buttons on the console are stuck down, such as B or START)
+    hidScanInput();
+
     int seconds_until_autolaunch = 25;
     u64 next_second_tick = 0ull;
     bool do_jump = false;

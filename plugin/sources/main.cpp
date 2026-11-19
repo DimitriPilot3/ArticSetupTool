@@ -230,6 +230,9 @@ void Main() {
     
     DisableSleep();
     
+    // Dry scan all the inputs (in case some buttons are stuck down, such as B or START)
+    hidScanInput();
+
     while (aptMainLoop())
 	{
         if (reloadBottomText) {
