@@ -31,6 +31,8 @@ cd ArticSetupTool
 
 Then run `make`. On success, output files will be saved to the `app/output/3ds-arm` folder (for `AzaharArticSetup.cia` and `AzaharArticSetup.3dsx`) and the `plugin` folder (for `AzaharArticSetup.3gx`).
 
+NOTE: If you change the plugin code (in `plugin/`) for testing purposes, please be aware that the application, by default, does not overwrite the existing plugin file (at `sd:/3ds/ArticSetupTool/ArticSetupTool.3gx`) if its current version number is the same as the app's. This means that such plugin changes may be ignored. To ignore the version check and have the application always overwrite the existing plugin, run `make VERSION_MAJOR=0` instead of just `make`.
+
 ## License
 See [LICENSE](LICENSE)
 
