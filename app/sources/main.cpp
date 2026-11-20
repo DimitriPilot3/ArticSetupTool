@@ -9,7 +9,7 @@
 #include "plgldr.h"
 #include "BCLIM.hpp"
 #include "logo.h"
-#include "plugin.h"
+#include "AzaharArticSetup_3gx.h"
 #include "3gx.h"
 
 Logger logger;
@@ -47,7 +47,7 @@ error:
 }
 
 bool extractPlugin() {
-    u32 expectedVersion = SYSTEM_VERSION(VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
+    u32 expectedVersion = SYSTEM_VERSION(VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
     bool plugin_needs_update = true;
     FILE* f = fopen(artic_setup_plugin, "r");
     if (f) {
@@ -66,9 +66,9 @@ bool extractPlugin() {
             logger.Error("Cannot open plugin file");
             return false;
         }
-        int written = fwrite(plugin_AzaharArticSetup_3gx, 1, plugin_AzaharArticSetup_3gx_size, f);
+        int written = fwrite(AzaharArticSetup_3gx, 1, AzaharArticSetup_3gx_size, f);
         fclose(f);
-        if (written != plugin_AzaharArticSetup_3gx_size) {
+        if (written != AzaharArticSetup_3gx_size) {
             logger.Error("Cannot write plugin file");
             return false;
         }
@@ -159,7 +159,7 @@ void Main() {
     {
         CTRPluginFramework::BCLIM((void*)__data_logo_bin, __data_logo_bin_size).Render(CTRPluginFramework::Rect<int>((320 - 128) / 2, (240 - 128) / 2, 128, 128));
     }
-    logger.Raw(false, "\n      Azahar Artic Setup v%d.%d.%d\n", VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
+    logger.Raw(false, "\n      Azahar Artic Setup v%d.%d.%d\n", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
     logger.Raw(false, isEmulator ? " " : "    Press A to launch setup tool.");
     logger.Raw(false, "    Press B or START to exit.");
     logger.Raw(true, "");

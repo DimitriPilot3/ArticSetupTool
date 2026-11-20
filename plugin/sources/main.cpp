@@ -205,7 +205,7 @@ void Main() {
                         "  - X:      Show debug log             \n"
                         "  - Y:      Restart server             \n"
                         "  - START:  Exit                       \n"
-                        , VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
+                        , VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
     };
     
     print_bottom_info();

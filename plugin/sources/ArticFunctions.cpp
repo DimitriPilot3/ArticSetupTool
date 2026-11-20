@@ -10,6 +10,8 @@
 #include "CTRPluginFramework/Clock.hpp"
 #include "nim_extheader.h"
 
+#include "libctru_shim.hpp"
+
 extern "C" {
 #include "csvc.h"
 }

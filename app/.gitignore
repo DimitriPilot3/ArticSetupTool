@@ -4,5 +4,5 @@
 output/
 *.map
 
-includes/plugin.h
-sources/plugin.c
+includes/AzaharArticSetup_3gx.h
+sources/AzaharArticSetup_3gx.s

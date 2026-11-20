@@ -26,14 +26,14 @@ LIBRARIES := ctru
 
 VERSION_MAJOR := 1
 VERSION_MINOR := 0
-VERSION_MICRO := 3
+VERSION_MICRO := 4
 
 BUILD_FLAGS := -march=armv6k -mtune=mpcore -mfloat-abi=hard
 BUILD_FLAGS_CC := -g -Wall -Wno-strict-aliasing -O3 -mword-relocations \
 					-fomit-frame-pointer -ffast-math $(ARCH) $(INCLUDE) -D__3DS__ $(BUILD_FLAGS) \
 					-DVERSION_MAJOR=${VERSION_MAJOR} \
 					-DVERSION_MINOR=${VERSION_MINOR} \
-					-DVERSION_REVISION=${VERSION_MICRO}
+					-DVERSION_MICRO=${VERSION_MICRO}
 
 BUILD_FLAGS_CXX := $(BUILD_FLAGS_CC) $(COMMON_FLAGS) -fno-rtti -fno-exceptions -std=gnu++20
 RUN_FLAGS :=
